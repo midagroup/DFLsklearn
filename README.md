@@ -7,4 +7,4 @@ Python setup.py install
 
 Usage
 
-See how to use the code in the examples.txt.
+See how to use the code in the examples.py.
