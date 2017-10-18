@@ -7,4 +7,7 @@ Python setup.py install
 
 Usage
 
-See how to use the code in the examples.py.
+See how to use the code in the examples.py. 
+The file examples.py has examples both for classification and regression, plus an example to initialize a custom estimator from sklearn.
+
+The file "custom_funct_interfaces.py" contains some examples of custom functions that interface DFL to the estimators of sklearn. Such functions can be used as templates for a user made function.
