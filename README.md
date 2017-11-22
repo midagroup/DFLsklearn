@@ -3,6 +3,8 @@
 DFLsklearn is a method to find the hyperparameters of a machine learning algorithm in [scikit-learn](http://scikit-learn.org/). 
 The method automatically supports many estimators among the ones present in Sklearn, but it is also capable of handling all the algorithms that inherit from the ```BaseEstimator``` class of sklearn.
 
+DFLsklearn has been tested on linux and macos distributions.
+
 ## Installation
 
     The code can be downloaded from github:
