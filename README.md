@@ -5,7 +5,7 @@ The method automatically supports many estimators among the ones present in Skle
 
 DFLsklearn has been tested on linux and macos distributions.
 
-DFLsklearn documentation is available online at mida.dima.unige.it/dflsklearn
+DFLsklearn documentation is available online at (mida.dima.unige.it/dflsklearn)
 
 ## Installation
 
