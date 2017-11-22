@@ -6,7 +6,7 @@ The method automatically supports many estimators among the ones present in Skle
 ## Installation
 
     The code can be downloaded from github:
-    git clone git@github.com:vlatorre847/DFLsklearn.git
+    git clone git@github.com:midagroup/DFLsklearn.git
 
 and the installation can be performed in the root of the downloaded folder by using the standard pip command:
 
