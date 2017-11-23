@@ -3,7 +3,7 @@
 """
 Created on Wed Oct 18 11:26:32 2017
 
-@author: Valyria
+@authors: V. Latorre, F. Benvenuto
 """
 import sklearn
 from DFLsklearn import KFold_error 
@@ -12,8 +12,8 @@ def interface_funct(model_f,z):
     global X_values,Y_values,n_splits, base_exp,algo, hp_list,has_no_space,var_is_int,space_points,hp_space
 
     '''
-    Some custom model functs, as exmples to implement in the case the user 
-    wants to implment some custom interfaces between sklearn and DFL
+    Some custom model functs, as examples to implement in the case the user 
+    wants to implement some custom interfaces between sklearn and DFL
     '''
     
     

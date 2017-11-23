@@ -1,0 +1,126 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module funct__user__routines 
+    interface funct_user_interface 
+        function funct_obj(n,x) ! in :dfl:main_box.f90:funct:unknown_interface
+            integer, optional,intent(in),check(len(x)>=n),depend(x) :: n=len(x)
+            real*8 dimension(n),intent(in) :: x
+            real :: funct_obj
+        end function funct_obj
+    end interface funct_user_interface
+end python module funct__user__routines
+
+python module dfl ! in 
+    interface  ! in :dfl
+        subroutine main_box_discr(funct_obj, ext_x, ext_bl, ext_bu, step,init_int_step, is_integer, ext_n, r) ! in :dfl:main_box.f90
+            use funct__user__routines
+            external funct_obj
+            real*8 dimension(ext_n),intent(in) :: ext_x,step,init_int_step
+            real*8 dimension(ext_n),intent(in),depend(ext_n) :: ext_bl
+            real*8 dimension(ext_n),intent(in),depend(ext_n) :: ext_bu
+            integer, optional,intent(in),check(len(ext_x)>=ext_n),depend(ext_x) :: ext_n=len(ext_x)
+            real*8 dimension(ext_n),intent(out),depend(ext_n) :: r
+	    logical dimension(ext_n),intent(in) ::  is_integer
+            integer :: ext_nf_max
+            integer :: ext_iprint
+            real*8 :: ext_alfa_stop
+            common /ext/ ext_nf_max,ext_iprint,ext_alfa_stop
+        end subroutine main_box_discr
+
+        subroutine funct(funct_obj,x,n,f) ! in :dfl:main_box.f90
+            use funct__user__routines
+            external funct_obj
+            real*8 dimension(n),intent(in) :: x
+            integer, optional,intent(in),check(len(x)>=n),depend(x) :: n=len(x)
+            real*8 intent(out) :: f
+        end subroutine funct
+
+        subroutine sd_box(n,index_int,scale_int,init_int_step,x,f,bl,bu,alfa_stop,nf_max,ni,nf,iprint,istop,funct_obj) ! in :dfl:sd.f90
+            use funct__user__routines
+            integer, optional,check(len(index_int)>=n),depend(index_int) :: n=len(index_int)
+            integer dimension(n) :: index_int
+            real*8 dimension(n),depend(n) :: scale_int,init_int_step
+            real*8 dimension(n),depend(n) :: x
+            real*8 :: f
+            real*8 dimension(n),depend(n) :: bl
+            real*8 dimension(n),depend(n) :: bu
+            real*8 :: alfa_stop
+            integer :: nf_max
+            integer :: ni
+            integer :: nf
+            integer :: iprint
+            integer :: istop
+            external funct_obj
+        end subroutine sd_box
+
+        subroutine stop(n,index_int,scale_int,alfa_d,istop,alfa_max,nf,ni,fstop,f,alfa_stop,nf_max,flag_fail) ! in :dfl:sd.f90
+            integer, optional,check(len(index_int)>=n),depend(index_int) :: n=len(index_int)
+            integer dimension(n) :: index_int
+            real*8 dimension(n),depend(n) :: scale_int
+            real*8 dimension(n),depend(n) :: alfa_d
+            integer :: istop
+            real*8 :: alfa_max
+            integer :: nf
+            integer :: ni
+            real*8 dimension(n + 1),depend(n) :: fstop
+            real*8 :: f
+            real*8 :: alfa_stop
+            integer :: nf_max
+            integer dimension(n),depend(n) :: flag_fail
+        end subroutine stop
+
+        subroutine linesearchbox_cont(n,scale_int,x,f,d,alfa,alfa_d,z,fz,i_corr,num_fal,alfa_max,i_corr_fall,iprint,bl,bu,ni,nf,funct_obj) ! in :dfl:sd.f90
+            use funct__user__routines
+            integer, optional,check(len(scale_int)>=n),depend(scale_int) :: n=len(scale_int)
+            real*8 dimension(n) :: scale_int
+            real*8 dimension(n),depend(n) :: x
+            real*8 :: f
+            real*8 dimension(n),depend(n) :: d
+            real*8 :: alfa
+            real*8 dimension(n),depend(n) :: alfa_d
+            real*8 dimension(n),depend(n) :: z
+            real*8 :: fz
+            integer :: i_corr
+            integer :: num_fal
+            real*8 :: alfa_max
+            integer :: i_corr_fall
+            integer :: iprint
+            real*8 dimension(n),depend(n) :: bl
+            real*8 dimension(n),depend(n) :: bu
+            integer :: ni
+            integer :: nf
+            external funct_obj
+        end subroutine linesearchbox_cont
+
+        subroutine linesearchbox_discr(n,eta,index_int,scale_int,x,f,d,alfa,alfa_d,z,fz,i_corr,num_fal,alfa_max,i_corr_fall,iprint,bl,bu,ni,nf,discr_change,flag_fail,funct_obj) ! in :dfl:sd.f90
+            use funct__user__routines
+            integer, optional,check(len(index_int)>=n),depend(index_int) :: n=len(index_int)
+            real*8 :: eta
+            integer dimension(n) :: index_int
+            real*8 dimension(n),depend(n) :: scale_int
+            real*8 dimension(n),depend(n) :: x
+            real*8 :: f
+            real*8 dimension(n),depend(n) :: d
+            real*8 :: alfa
+            real*8 dimension(n),depend(n) :: alfa_d
+            real*8 dimension(n),depend(n) :: z
+            real*8 :: fz
+            integer :: i_corr
+            integer :: num_fal
+            real*8 :: alfa_max
+            integer :: i_corr_fall
+            integer :: iprint
+            real*8 dimension(n),depend(n) :: bl
+            real*8 dimension(n),depend(n) :: bu
+            integer :: ni
+            integer :: nf
+            logical :: discr_change
+            integer dimension(n),depend(n) :: flag_fail
+            external funct_obj
+        end subroutine linesearchbox_discr
+    end interface 
+end python module dfl
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
