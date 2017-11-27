@@ -184,4 +184,7 @@ def newpreset(model_f):
 
 
 if __name__ == '__main__':
+    demo_classification()
     demo_regression()
+    demo_custom()
+    demo_custom_preset()

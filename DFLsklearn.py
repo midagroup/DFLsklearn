@@ -52,21 +52,24 @@ def configuration_preset(model_f, X_values):
     n_features = X_values.shape[1]
 
     if(isinstance(model_f, sklearn.linear_model.ElasticNet)):
-        base_exp = 2
-        n = 2
-        ext_z = numpy.array([0] * n)
-        alpha = model_f.get_params().pop('alpha')
-        l1_ratio = model_f.get_params().pop('l1_ratio')
-        ext_z = numpy.array([log_base(alpha, base_exp), l1_ratio])
-        ext_z = ext_z.astype(float)
-        ext_lb = numpy.array(-10, 0.0)
-        ext_ub = numpy.array(10, 1.0)
-        ext_step = numpy.array([10**0] * n)
-        init_int_step = numpy.array([1] * n)
-        ext_is_integer = numpy.ones(n)
-        hp_list = ['alpha', 'l1_ratio']
-        on_a_mesh = [1, 0]
-        var_is_int = numpy.zeros(n)
+        if(isinstance(model_f, sklearn.linear_model.Lasso)):
+            pass
+        else:
+            base_exp = 2
+            n = 2
+            ext_z = numpy.array([0] * n)
+            alpha = model_f.get_params().pop('alpha')
+            l1_ratio = model_f.get_params().pop('l1_ratio')
+            ext_z = numpy.array([log_base(alpha, base_exp), l1_ratio])
+            ext_z = ext_z.astype(float)
+            ext_lb = [-10, 0.0]
+            ext_ub = [10, 1.0]
+            ext_step = numpy.array([10**0] * n)
+            init_int_step = numpy.array([1] * n)
+            ext_is_integer = numpy.ones(n)
+            hp_list = ['alpha', 'l1_ratio']
+            on_a_mesh = [1, 0]
+            var_is_int = numpy.zeros(n)
 
     if(isinstance(model_f, sklearn.linear_model.MultiTaskElasticNet)):
         base_exp = 2
@@ -76,8 +79,8 @@ def configuration_preset(model_f, X_values):
         l1_ratio = model_f.get_params().pop('l1_ratio')
         ext_z = numpy.array([log_base(alpha, base_exp), l1_ratio])
         ext_z = ext_z.astype(float)
-        ext_lb = numpy.array(-10, 0.0)
-        ext_ub = numpy.array(10, 1.0)
+        ext_lb = [-10, 0.0]
+        ext_ub = [10, 1.0]
         ext_step = numpy.array([10**0] * n)
         init_int_step = numpy.array([1] * n)
         ext_is_integer = numpy.ones(n)
@@ -433,7 +436,7 @@ class DFL_estimator(BaseEstimator):
         If 1 it indicates if the variable moves on the space indicated by
         hp_mesh_bin, if 0 the variable moves in the set of real number if
         it is continuous, and in the set of integer numbers if it is
-        interger as indicated in the parameter "is_integer".
+        integer as indicated in the parameter "is_integer".
 
     hp_mesh_bin : list, optional, default ['log']
         It indicates what kind of values the meshes of the grid assumes for
@@ -487,7 +490,7 @@ class DFL_estimator(BaseEstimator):
         Number of splits in the k-fold cross validation
 
     minimization : boolean, optional, default True
-        It indicates if the cross validation function should be minimizzed
+        It indicates if the cross validation function should be minimized
         or maximized
 
     is_integer : list, optional, default None
@@ -509,7 +512,7 @@ class DFL_estimator(BaseEstimator):
         If the user wants the i-th hyperparameter to be moved on the space
         Defined by the list hp_mesh_bin he must set:
         on_a_mesh[i]=1
-	then is_integer[i] will be overidden to 1 
+	then is_integer[i] will be overridden to 1 
 
     step : list, optional, default None
         List of minimum steps to be taken along the integer hyperparameters
@@ -521,7 +524,7 @@ class DFL_estimator(BaseEstimator):
         Minimum step size along the continuous hyperparameters
 
     nf_max : integer, optional, default 200
-        Maximum number of fuction evaluations for DFL
+        Maximum number of function evaluations for DFL
 
     iprint : integer, optional, default 2
         Level of printing for DFL
@@ -792,7 +795,14 @@ class DFL_estimator(BaseEstimator):
         in the space of integer numbers if it is discrete all according to the
         list is_integer.
         """
-
+        
+        if len(self.hp_mesh_bin) == 1:
+            aux = []
+            for i in range(self.n):
+                aux.append(self.hp_mesh_bin[0])
+            self.hp_mesh_bin = aux
+        
+        
         if self.bin_num is None:
             self.bin_num = [self.bin_num] * self.n
 
@@ -840,7 +850,7 @@ class DFL_estimator(BaseEstimator):
         function that is called directly by dfl in Fortran
         """
 
-        print(z)
+#        print(z)
         self.interface_funct(z)
         return self.KFold_error()
 
@@ -931,8 +941,9 @@ class DFL_estimator(BaseEstimator):
                 error = sklearn.metrics.mean_squared_error(
                     Y_validation, F_validation)
             error_fold.append(error)
-        print('error:', numpy.mean(error_fold))
+#        print('error:', numpy.mean(error_fold))
         if self.minimization:
             return numpy.mean(error_fold)
         else:
             return -numpy.mean(error_fold)
+
